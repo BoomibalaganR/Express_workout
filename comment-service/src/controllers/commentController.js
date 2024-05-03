@@ -28,11 +28,14 @@ const getAllComment = async (req, res)=>{
         }
 
         const comments=  await Comment.find(filter) 
+        
         // if no post available, return 404 Not Found
         if (!comments || comments.length === 0) {
             return res.status(404).json({ message: 'No more comments available' });
         }  
-        return res.status(200).json(comments);
+
+        return res.status(200).json(comments)
+
     }catch(err){
         res.status(500).json({message: error.message});
     }
@@ -43,11 +46,12 @@ const getCommentById = async (req, res)=>{
     try{ 
         commentID = req.params.commentId 
         comment = await Comment.findById({_id: commentID}) 
+        
         if (!comment || comment.length === 0) {
             return  res.status(404).json({message: 'comment not found'}) 
         }   
+        
         return res.status(200).json(comment);
-
 
     }catch(error){
         res.status(500).json({message: error.message});
@@ -64,6 +68,7 @@ const updateComment = async (req, res)=>{
         if (updatedComment.matchedCount === 0) { 
             return res.status(404).json({message:'Comment not found'});
         }
+        
         return res.status(200).json({message: 'Comment updated successfully'});
         
     } catch (error) {

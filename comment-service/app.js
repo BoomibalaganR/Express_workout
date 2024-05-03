@@ -19,7 +19,7 @@ app.use('/api/comments', commentRoutes)
 
 
 // Start the server
-const PORT = process.env.PORT||8003; // Use environment variable or default port 3000
+const PORT = 8003; 
 app.listen(PORT, () => {
   console.log(`comment-service is running on port ${PORT}`);
 });

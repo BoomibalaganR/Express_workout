@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost:27017/blog-postDB')
 
 // Parse JSON request bodies 
 app.use(bodyParser.json()); 
-app.use('/api/posts', postRoutes)
+app.use('api/posts', postRoutes)
 
 
 // Start the server

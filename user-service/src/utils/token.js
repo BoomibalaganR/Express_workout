@@ -12,7 +12,7 @@ const generateToken = (userId, username) => {
     };
 
     // Sign the payload with a secret key to generate JWT token
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1m' }); 
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '5m' }); 
     return token;
 }; 
 
