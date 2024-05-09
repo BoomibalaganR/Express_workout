@@ -1,6 +1,6 @@
 const express = require('express') 
 const app = express()   
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
  
 
 const mongoose = require( 'mongoose');
@@ -14,12 +14,12 @@ mongoose.connect('mongodb://localhost:27017/blog-postDB')
 
 
 // Parse JSON request bodies 
-app.use(bodyParser.json()); 
-app.use('api/posts', postRoutes)
+app.use(bodyParser.json())
+app.use('/api/posts', postRoutes)
 
 
 // Start the server
 const PORT = 8002;
 app.listen(PORT, () => {
-  console.log(`post-service is running on port ${PORT}`);
-});
+  console.log(`post-service is running on port ${PORT}`)
+})

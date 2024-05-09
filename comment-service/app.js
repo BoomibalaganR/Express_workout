@@ -1,9 +1,9 @@
 const express = require('express') 
 const app = express()   
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
  
 
-const mongoose = require( 'mongoose');
+const mongoose = require( 'mongoose')
 const commentRoutes = require('./src/routes/commentRoutes')
 
 
@@ -14,12 +14,12 @@ mongoose.connect('mongodb://localhost:27017/blog-commentDB')
 
 
 // Parse JSON request bodies 
-app.use(bodyParser.json()); 
+app.use(bodyParser.json())
 app.use('/api/comments', commentRoutes)
 
 
 // Start the server
-const PORT = 8003; 
+const PORT = 8003
 app.listen(PORT, () => {
-  console.log(`comment-service is running on port ${PORT}`);
-});
+  console.log(`comment-service is running on port ${PORT}`)
+})

@@ -1,14 +1,18 @@
 const Post = require("../models/post") 
-const axios = require('axios');
-
 
 
 const createNewPost = async (req, res)=>{ 
     try{
         const {title, content} = req.body 
-        const author = req.user.id; 
+        const user = JSON.parse(req.headers['user']); 
 
-        await Post.create({title, content, author}) 
+        await Post.create({
+            title, 
+            content, 
+            author:{
+                id: user.userId, 
+                username:user.username
+            }}) 
 
         return res.status(201).json({'msg':'successfully created'})
     } catch (error) { 
@@ -19,7 +23,7 @@ const createNewPost = async (req, res)=>{
 
 
 
-const getAllPost = async (req, res)=>{
+const getAllPost = async (req, res)=>{ 
    
     try{
         const posts=  await Post.find() 
@@ -28,27 +32,11 @@ const getAllPost = async (req, res)=>{
             return res.status(404).json({ message: 'No more post available' });
         }
 
-        // Fetch author details for each post from the user service
-        const postsWithUsers = await Promise.all(posts.map(async (post) => { 
-            
-            try{
-                const userResponse = await axios.get(`http://127.0.0.1:8001/api/users/${post.author}`);
-                const user = userResponse.data;
-                return { ...post.toObject(), author: user }; // Combine post data with user details
-
-            }catch (error) {
-                // Handle error when fetching user details
-                console.error('Error fetching user details for post:', error);
-                // return author null
-                return { ...post.toObject(), author: null };
-            }
-        })); 
-
         // If posts are found, return a 200 OK response with the posts
-        return res.status(200).json(postsWithUsers)
+        return res.status(200).json(posts)
     } catch (error) {
         // If an error occurs, return a 500 Internal Server Error response
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message })
     } 
     }
 
@@ -62,25 +50,12 @@ const getPostById = async (req, res)=>{
             return  res.status(200).json({message: 'post not found'}) 
         }  
         
-        // Fetch author details for a post from the user service
-        try{
-            const userResponse = await axios.get(`http://127.0.0.1:8001/api/users/${post.author}`);
-            const user = userResponse.data;
-            
-            postWithUser =  { ...post.toObject(), author: user }; // Combine post data with user details 
-        }catch (error) {
-            // Handle error when fetching user details
-            console.error('Error fetching user details for post:', error);
-            //  return null or an empty object for the user in case of error
-            postWithUser = { ...post.toObject(), author: null };
-        } 
-        
         // If posts are found, return a 200 OK response with the posts
-        return res.status(200).json(postWithUser);
+        return res.status(200).json(post)
        
     }catch (error) {
         // If an error occurs, return a 500 Internal Server Error response
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message })
     } 
 
 } 
@@ -96,10 +71,10 @@ const deletePost = async(req, res)=>{
             return res.status(200).json({message:'successfully deleted'})
         } 
 
-        return res.status(404).json({message: 'Post not found'});
+        return res.status(404).json({message: 'Post not found'})
     }catch (error) {
         // If an error occurs, return a 500 Internal Server Error response
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message })
     }  
 }  
 
@@ -109,16 +84,16 @@ const updatePost= async(req, res)=>{
         const updatedPost = await Post.updateOne({
              _id: req.params.postId  },
              req.body,
-             { runValidators: true });
+             { runValidators: true })
 
         if (updatedPost.matchedCount === 0) { 
-            return res.status(404).json({message:'Post not found'});
+            return res.status(404).json({message:'Post not found'})
         }
-        return res.status(200).json({message: 'Post updated successfully'});
+        return res.status(200).json({message: 'Post updated successfully'})
         
     } catch (error) {
         console.error(error);
-        res.status(500).json({message: error.message});
+        res.status(500).json({message: error.message})
     }
 } 
  

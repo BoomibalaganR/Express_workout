@@ -4,11 +4,11 @@ const token  = require("../utils/token")
 
 const createUser = async(req, res)=>{
     
-    try{
+    try{ 
+
+        console.log('inside user service...',req.body)
         const newUser = await User.create(req.body)
-        // const newUser = new User(req.body) 
-        // await newUser.validate() 
-        // await newUser.save() 
+
         return res.status(201).json(newUser)
     }catch (error) {
            return res.status(400).json({ error: error.message })
@@ -19,6 +19,7 @@ const createUser = async(req, res)=>{
 
 const userLogin = async(req, res)=>{
     try{  
+        
         const {username, password} = req.body 
         
         if (!username || !password){
@@ -50,11 +51,14 @@ const userLogin = async(req, res)=>{
 
 const getUserById = async(req, res)=>{
     try{ 
+        
         userID = req.params.userId 
         user = await User.findById({_id: userID}).select('-password')
+        
         if(!user){
             return res.status(404).json({error: "User not found"})
         }
+        
         return res.status(200).json(user)
     
     }catch(error){

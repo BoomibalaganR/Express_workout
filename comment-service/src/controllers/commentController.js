@@ -1,6 +1,4 @@
 const Comment = require('../models/comment') 
-const axios = require('axios'); 
-
 
 
 const createNewComment = async (req, res)=>{
@@ -8,8 +6,15 @@ const createNewComment = async (req, res)=>{
         console.log(req.body)
         const {content, postId} = req.body  
         
-        const user = req.user.id;  
-        const comment = await Comment.create({content, post:postId, user}) 
+        const user = JSON.parse(req.headers['user']) 
+       
+        const comment = await Comment.create({
+            content: content, 
+            post:postId, 
+            user:{
+                id: user.userId, 
+                username: user.username
+            }}) 
 
         console.log(comment)
         return res.status(201).json({'msg':'comment successfully created'})
@@ -31,7 +36,7 @@ const getAllComment = async (req, res)=>{
         
         // if no post available, return 404 Not Found
         if (!comments || comments.length === 0) {
-            return res.status(404).json({ message: 'No more comments available' });
+            return res.status(404).json({ message: 'No more comments available' })
         }  
 
         return res.status(200).json(comments)
@@ -51,10 +56,10 @@ const getCommentById = async (req, res)=>{
             return  res.status(404).json({message: 'comment not found'}) 
         }   
         
-        return res.status(200).json(comment);
+        return res.status(200).json(comment)
 
     }catch(error){
-        res.status(500).json({message: error.message});
+        res.status(500).json({message: error.message})
     }
 }  
 
@@ -63,17 +68,17 @@ const updateComment = async (req, res)=>{
         const updatedComment = await Comment.updateOne({
              _id: req.params.commentId  },
              req.body,
-             { runValidators: true, new: true });
+             { runValidators: true, new: true })
 
         if (updatedComment.matchedCount === 0) { 
-            return res.status(404).json({message:'Comment not found'});
+            return res.status(404).json({message:'Comment not found'})
         }
         
-        return res.status(200).json({message: 'Comment updated successfully'});
+        return res.status(200).json({message: 'Comment updated successfully'})
         
     } catch (error) {
-        console.error(error);
-        res.status(500).json({message: error.message});
+        console.error(error)
+        res.status(500).json({message: error.message})
     }
 }   
 
@@ -88,10 +93,10 @@ const deleteComment = async (req, res)=>{
             return res.status(200).json({message:'comment successfully deleted'})
         } 
 
-        return res.status(404).json({message: 'Comment not found'});
+        return res.status(404).json({message: 'Comment not found'})
     }catch (error) {
         // If an error occurs, return a 500 Internal Server Error response
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message })
     }  
 } 
 

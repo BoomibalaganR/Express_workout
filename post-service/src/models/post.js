@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 
 const postSchema = new mongoose.Schema({
@@ -10,17 +10,19 @@ const postSchema = new mongoose.Schema({
         type: String,
         required:[true,"post content not empty"]
     },
-    author: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User',
-        required: [true,"author of the post required"]
+    author:  {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true
+        },
+        username: {
+            type: String,
+            required: true
+        }
     },
    
 },
-{ timestamps: true }); 
+{ timestamps: true })
 
-
-
-  
 
 module.exports = mongoose.model('Post', postSchema) 
