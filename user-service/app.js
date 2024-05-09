@@ -19,10 +19,7 @@ app.use(bodyParser.json())
 app.use('/api/users', userRoutes)
 
 
-app.use((err, req, res, next) => {
-  console.error(err.stack)
-  res.status(500).send('Something broke!')
-})
+
 
 // Start the server
 const PORT = 8001 
